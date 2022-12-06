@@ -33,19 +33,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Get latest version from tags
-        id: latest-version
-        run: |
-          VERSION=`git tag --sort=committerdate | tail -1`
-          echo "Current version ${VERSION}"
-          echo "version=${VERSION:1}" >> $GITHUB_OUTPUT
-
-      - name: Bump release version
-        id: bump_version
-        uses: christian-draeger/increment-semantic-version@1.0.3
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
         with:
-          current-version: ${{steps.latest-version.outputs.version}}
-          version-fragment: 'feature'
+          fallback: 0.1.0 # Optional fallback tag to use when no tag can be found
+
+      - name: 'Get next version'
+        id: semvers
+        uses: "WyriHaximus/github-action-next-semvers@v1"
+        with:
+          version: ${{ steps.previoustag.outputs.tag }}
 
       # Install the cosign tool except on PR
       # https://github.com/sigstore/cosign-installer
@@ -89,7 +87,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: |
             ${{ steps.meta.outputs.labels }}
-            version=v${{ steps.bump_version.outputs.next-version }}
+            version=${{ steps.semvers.outputs.v_minor }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -116,6 +114,6 @@ jobs:
 
       - name: Push updated tags to repository
         run: |
-          git tag v${{ steps.bump_version.outputs.next-version }}
+          git tag ${{ steps.semvers.outputs.v_minor }}
           git push "https://$GITHUB_ACTOR:${{ secrets.ACCESS_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" --follow-tags
           git push "https://$GITHUB_ACTOR:${{ secrets.ACCESS_TOKEN }}@github.com/$GITHUB_REPOSITORY.git" --tags
