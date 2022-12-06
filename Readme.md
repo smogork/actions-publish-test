@@ -11,3 +11,9 @@ Private key should be attached as secret to your repository settings.
 
 [Pipeline article](https://dev.to/n3wt0n/sign-your-container-images-with-cosign-github-actions-and-github-container-registry-3mni)
 
+It is simple pipeline wich: builds container, publishes it and signs it with key stored in secrets.
+You can use cosign feature to sent keys directly to github secrets described in linked article.
+Container can be verified by command 
+```
+cosign verify --key cosign.pub ghcr.io/smogork/actions-publish-test:main
+```
