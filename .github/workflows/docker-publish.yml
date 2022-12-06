@@ -115,5 +115,5 @@ jobs:
       - name: Push updated tags to repository
         run: |
           git tag ${{ steps.semvers.outputs.v_minor }}
-          git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" --follow-tags
-          git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}" --tags
+          git push "https://${{ github.actor }}:${{ secrets.ACCESS_TOKEN }}@github.com/${{ github.repository }}" --follow-tags
+          git push "https://${{ github.actor }}:${{ secrets.ACCESS_TOKEN }}@github.com/${{ github.repository }}" --tags
