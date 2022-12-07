@@ -33,10 +33,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: 'Get working dir'
-        run: |
-          echo "pwd:$PWD" 
-          ls -la
+        # git fetch --unshallow --tags
+        # echo $?
+      - run: |
+          git tag --list
 
       - name: 'Get Previous tag'
         id: previoustag
