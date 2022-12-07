@@ -33,9 +33,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-        # git fetch --unshallow --tags
-        # echo $?
-      - run: |
+      - name: Checkout tags
+        run: |
+          git fetch --unshallow --tags
+          echo $?
           git tag --list
 
       - name: 'Get Previous tag'
